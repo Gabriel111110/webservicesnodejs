@@ -1,13 +1,13 @@
-const ul = document.getElementById("ul");
+const ul = document.getElementById("lista");
 const button = document.getElementById("submit");
-const input = document.getElementById("inputText");
+const inputTesto = document.getElementById("inputText");
 let list = [];
 let count = 0;
-const myToken = "67fea5bf-6439-4377-bf9b-65f43a7459e9";
+const myToken = "d6fe87f2-9677-4534-bd39-2a5ae35d8b14";
 const myKey = "chiave";
 
 
-const caricaLista=()=> {
+function loadList() {
   fetch("/todo", {
     method: "GET",
     headers: {
@@ -21,15 +21,14 @@ const caricaLista=()=> {
     render();
   })
 }
-caricaLista();
+loadList();
 
 button.onclick = () => {
   const data = {
-    inputValue: input.value,
+    inputValue: inputTesto.value,
     completed: false,
   };
 
-  // Invia il nuovo elemento al server
   fetch("/todo/add", {
     method: "POST",
     headers: {
@@ -39,9 +38,9 @@ button.onclick = () => {
   })
     .then((response) => response.json())
     .then((result) => {
-      list.push(result.todo); // Aggiorna la lista con l'elemento dal server
+      list.push(result.todo); 
       render();
-      input.value = ""; // Resetta l'input
+      inputTesto.value = ""; 
     });
 };
 
@@ -60,20 +59,20 @@ function render() {
   document.querySelectorAll(".pulsantiElimina").forEach((button) => {
     button.onclick = () => {
       const id = button.id.replace("bottoneE_", "");
-      deleteTODO(id);
+      remove(id);
     };
   });
 
   document.querySelectorAll(".pulsantiConferma").forEach((button) => {
     button.onclick = () => {
       const id = button.id.replace("bottoneC_", "");
-      completeTodo(id);
+      update(id);
     };
   });
 }
 
 
-const completeTodo = (id) => { 
+function update(id) {
   const todo = list.find((item) => item.id === id);
   fetch("/todo/complete", {
     method: "PUT",
@@ -84,16 +83,15 @@ const completeTodo = (id) => {
   })
     .then((response) => response.json())
     .then(() => {
-      if(!todo.completed){
+      if(todo.completed===false){
       todo.completed = true;
       }else{
-        todo.completed=false
-      } // Aggiorna lo stato localmente
+        todo.completed=false;
+      } 
       render();
     });
 }
-
-const deleteTODO=(id)=> { //remove
+function remove(id) {
   fetch(`/todo/${id}`, {
     method: "DELETE",
     headers: {
