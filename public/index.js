@@ -3,8 +3,7 @@ const button = document.getElementById("submit");
 const inputTesto = document.getElementById("inputText");
 let list = [];
 let count = 0;
-const myToken = "d6fe87f2-9677-4534-bd39-2a5ae35d8b14";
-const myKey = "chiave";
+
 
 
 function loadList() {
